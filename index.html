@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midari AI</title>
+    <link rel="icon" type="image/x-icon" href="assets/Navegador.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="assets/Midari.ico" alt="Midari AI" width="48" height="48">
+                    </div>
+                    <div class="logo-text">
+                        <div class="company-name">Midari AI</div>
+                        <div class="tagline">Tu asistente personal</div>
+                    </div>
+                </div>
+
+                <button class="new-chat-btn" id="newChatBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" />
+                    </svg>
+                    Nuevo Chat
+                </button>
+            </div>
+
+            <div class="sidebar-content">
+                <div class="chat-history">
+                    <h3 class="history-title">Chats Recientes</h3>
+                    <div class="chat-list" id="chatList">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <div class="settings-title">Conectar con OpenRouter</div>
+                        <a class="settings-link" href="https://openrouter.ai/keys" target="_blank" rel="noopener">Obtener API key</a>
+                    </div>
+                    <label for="openRouterKeyInput" class="settings-label">API Key</label>
+                    <input id="openRouterKeyInput" class="settings-input" type="password" placeholder="sk-or-..." />
+                    <div class="settings-row">
+                        <select id="modelSelect" class="settings-select">
+                            <option value="openrouter/auto">openrouter/auto (recomendado)</option>
+                            <option value="openai/gpt-4o-mini">openai/gpt-4o-mini</option>
+                            <option value="anthropic/claude-3.5-haiku">anthropic/claude-3.5-haiku</option>
+                            <option value="google/gemini-flash-1.5">google/gemini-flash-1.5</option>
+                            <option value="mistralai/mistral-small">mistralai/mistral-small</option>
+                        </select>
+                        <button id="saveOpenRouterBtn" class="settings-button">Guardar</button>
+                    </div>
+                    <div class="settings-row">
+                        <label for="freeOnlyToggle" class="settings-label" style="display:flex;align-items:center;gap:8px;">
+                            <input id="freeOnlyToggle" type="checkbox" />
+                            Solo modelos gratis
+                        </label>
+                    </div>
+                    <div class="settings-hint" id="freeOnlyHint"></div>
+                    <div class="settings-hint">La clave se guarda solo en esta pestaña (sessionStorage). Se borra al cerrar la pestaña.</div>
+                    <div class="settings-hint">Consejo de seguridad: usa una API key con límites y no la compartas.</div>
+                </div>
+            </div>
+            <div class="model-badge">
+                <div class="model-status"></div>
+                <div class="model-details">
+                    <div class="model-name">OpenRouter</div>
+                    <div class="model-type">API en la nube</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="chat-header">
+                <div class="header-content">
+                    <div class="header-title">
+                        <h1>Midari AI</h1>
+                        <p>Tu asistente de inteligencia artificial personal</p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-section">
+                    <div class="welcome-card">
+                        <div class="welcome-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                                    stroke="url(#welcomeGradient)" stroke-width="2" fill="none" />
+                                <defs>
+                                    <linearGradient id="welcomeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#667eea" />
+                                        <stop offset="100%" style="stop-color:#764ba2" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h2>Bienvenido a Midari AI</h2>
+                        <p>Tu asistente de IA personal. Conecta tu API key de OpenRouter para empezar a chatear.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-bar" id="statusBar">
+                <div class="status-content">
+                    <div class="status-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" />
+                            <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" fill="none" />
+                        </svg>
+                    </div>
+                <div class="status-text">
+                    <div class="status-message" id="statusMessage">Ingresa tu API key de OpenRouter para comenzar</div>
+                    <div class="status-detail">Ve a OpenRouter y pega aquí tu clave. Luego presiona Guardar.</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">0%</div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <textarea id="messageInput" placeholder="Conecta tu API key para habilitar el chat" rows="1"
+                    disabled></textarea>
+                <button id="sendButton" disabled>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="currentColor" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <footer class="chat-footer">
+            <div class="footer-content">
+                <div class="disclaimers">
+                    <div class="disclaimer-item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" />
+                            <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" fill="none" />
+                        </svg>
+                        El rendimiento del modelo depende de las especificaciones del modelo seleccionado.
+                    </div>
+                    <div class="disclaimer-item">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" />
+                            <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" fill="none" />
+                        </svg>
+                        El contenido generado por IA puede no ser preciso
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
