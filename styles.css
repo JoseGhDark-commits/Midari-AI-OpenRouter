@@ -620,9 +620,9 @@ body {
 
 .message-content {
     max-width: 75%;
-    padding: 16px 20px;
-    border-radius: 16px;
-    line-height: 1.6;
+    padding: 18px 22px;
+    border-radius: 18px;
+    line-height: 1.7;
     word-wrap: break-word;
     font-size: 15px;
     box-shadow: var(--shadow-sm);
@@ -639,6 +639,74 @@ body {
     color: var(--text-primary);
     border-bottom-left-radius: 4px;
     border: 1px solid var(--border-light);
+}
+
+/* Espaciado interno para contenido Markdown dentro del globo */
+.message-content > :first-child { margin-top: 0 !important; }
+.message-content > :last-child { margin-bottom: 0 !important; }
+.message-content p,
+.message-content ul,
+.message-content ol,
+.message-content pre,
+.message-content blockquote,
+.message-content table { margin: 0.6em 0; }
+.message-content ul, .message-content ol { padding-left: 1.25em; }
+
+.message-content code {
+    background: var(--surface-tertiary);
+    border: 1px solid var(--border-light);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.95em;
+}
+.message-content pre {
+    background: var(--surface-primary);
+    border: 1px solid var(--border-light);
+    padding: 12px 14px;
+    border-radius: 12px;
+    overflow: auto;
+}
+.message-content pre code {
+    background: transparent;
+    border: 0;
+    padding: 0;
+}
+
+.message-content blockquote {
+    border-left: 3px solid var(--border-medium);
+    background: var(--surface-tertiary);
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: var(--text-secondary);
+}
+
+.message-content .thought-block {
+    margin: 10px 0 6px;
+    border: 1px dashed var(--border-medium);
+    background: var(--surface-secondary);
+    border-radius: 12px;
+}
+.message-content .thought-block > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 10px 12px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+}
+.message-content .thought-block > summary::-webkit-details-marker { display: none; }
+.message-content .thought-block > summary::before {
+    content: "🧠 ";
+}
+.message-content .thought-block[open] {
+    border-style: solid;
+}
+.message-content .thought-block[open] > summary { margin-bottom: 6px; }
+.message-content .thought-block > *:not(summary) {
+    padding: 0 12px 12px 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
 }
 
 .typing-indicator {

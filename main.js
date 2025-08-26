@@ -112,6 +112,17 @@ function renderMarkdownSafe(markdown) {
 
     return null;
 }
+function injectThoughtMarkup(text) {
+    try {
+        if (!text) return text;
+        const wrap = (inner) => `\n\n<details class="thought-block"><summary>Pensamiento del modelo</summary>\n\n${inner}\n\n</details>\n\n`;
+        let out = text.replace(/<think>([\s\S]*?)<\/think>/gi, (_, p1) => wrap(p1.trim()))
+                      .replace(/<thinking>([\s\S]*?)<\/thinking>/gi, (_, p1) => wrap(p1.trim()));
+        return out;
+    } catch (_) {
+        return text;
+    }
+}
 
 async function initializeApp() {
     try {
@@ -336,7 +347,7 @@ function addMessage(content, sender) {
     const contentDiv = document.createElement('div');
     contentDiv.className = 'message-content';
     if (sender === 'bot') {
-        const sanitized = renderMarkdownSafe(content);
+        const sanitized = renderMarkdownSafe(injectThoughtMarkup(content));
         if (sanitized !== null && sanitized !== undefined) {
             contentDiv.innerHTML = sanitized;
         } else {
@@ -391,7 +402,7 @@ function updateStreamingResponse(chunk, fullResponse) {
     }
     
     const contentDiv = document.getElementById('streaming-content');
-    const sanitized = renderMarkdownSafe(fullResponse);
+    const sanitized = renderMarkdownSafe(injectThoughtMarkup(fullResponse));
     if (sanitized !== null && sanitized !== undefined) {
         contentDiv.innerHTML = sanitized;
     } else {
